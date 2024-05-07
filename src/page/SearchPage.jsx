@@ -21,6 +21,7 @@ function SearchPage() {
             {filteredData.map((item) => (
               <div className="filter-card" key={item.id}>
                 <h3>{item.name}</h3>
+                <p>{item.id}</p>
                 <p>{item.address}</p>
                 <p>{item.pincode}</p>
               </div>
