@@ -13,27 +13,20 @@ function SearchPage() {
     setSelectedItemIndex(null);
   }, [searchText]);
 
-  useEffect(() => {
-    if (selectedItemRef.current) {
-      selectedItemRef.current.scrollIntoView({
-        behavior: "smooth",
-        block: "nearest",
-      });
-    }
-  }, [selectedItemIndex]);
-
   const handleKeyDown = (e) => {
     if (e.key === "ArrowDown") {
       e.preventDefault();
       setSelectedItemIndex((prevIndex) =>
-        prevIndex === null
+        prevIndex === null || prevIndex === filteredData.length - 1
           ? 0
-          : Math.min(prevIndex + 1, filteredData.length - 1)
+          : prevIndex + 1
       );
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
       setSelectedItemIndex((prevIndex) =>
-        prevIndex === null ? 0 : Math.max(prevIndex - 1, 0)
+        prevIndex === null
+          ? filteredData.length - 1
+          : Math.max(prevIndex - 1, 0)
       );
     }
   };
