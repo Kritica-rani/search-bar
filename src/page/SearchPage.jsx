@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect, useRef } from "react";
 import InputBox from "../component/InputBox";
 import "./styles.css";
 import { SearchContext } from "../context/context";
@@ -7,9 +7,20 @@ function SearchPage() {
   const { searchText, handleSearchText, filteredData } =
     useContext(SearchContext);
   const [selectedItemIndex, setSelectedItemIndex] = useState(null);
+  const selectedItemRef = useRef(null);
+
   useEffect(() => {
     setSelectedItemIndex(null);
   }, [searchText]);
+
+  useEffect(() => {
+    if (selectedItemRef.current) {
+      selectedItemRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+      });
+    }
+  }, [selectedItemIndex]);
 
   const handleKeyDown = (e) => {
     if (e.key === "ArrowDown") {
@@ -35,6 +46,25 @@ function SearchPage() {
     setSelectedItemIndex(null);
   };
 
+  const highlightText = (text) => {
+    const index = text.toLowerCase().indexOf(searchText.toLowerCase());
+    if (index !== -1) {
+      const prefix = text.slice(0, index);
+      const match = text.slice(index, index + searchText.length);
+
+      const suffix = text.slice(index + searchText.length);
+
+      return (
+        <>
+          {prefix}
+          <span className="highlight">{match}</span>
+          {suffix}
+        </>
+      );
+    }
+    return text;
+  };
+
   return (
     <div className="searchbox">
       <div>
@@ -49,6 +79,7 @@ function SearchPage() {
           <div className="filter-container">
             {filteredData.map((item, index) => (
               <div
+                ref={selectedItemIndex === index ? selectedItemRef : null}
                 className={`filter-card ${
                   selectedItemIndex === index ? "selected" : ""
                 }`}
@@ -56,11 +87,13 @@ function SearchPage() {
                 onMouseOver={() => handleMouseOver(index)}
                 onMouseLeave={handleMouseLeave}
               >
-                <h3>{item.name}</h3>
-                <p>{item.id}</p>
-                <p>{item.address}</p>
+                <h3>{highlightText(item.name)}</h3>
+                <p>{highlightText(item.id)}</p>
+                <p>{highlightText(item.address)}</p>
+
                 <p className="bold">{`${searchText} found in items`}</p>
-                <p>{item.pincode}</p>
+
+                <p>{highlightText(item.pincode)}</p>
               </div>
             ))}
           </div>

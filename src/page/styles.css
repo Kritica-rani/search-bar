@@ -39,3 +39,6 @@ input::placeholder {
   font-style: italic;
   font-weight: bold;
 }
+.highlight {
+  color: blue;
+}
