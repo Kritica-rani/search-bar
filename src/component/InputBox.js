@@ -1,12 +1,13 @@
 import React from "react";
 import "../page/styles.css";
-function InputBox({ type, placeholder, value, onChange }) {
+function InputBox({ type, placeholder, value, onChange, onKeyDown }) {
   return (
     <input
       type={type}
       placeholder={placeholder}
       value={value}
       onChange={onChange}
+      onKeyDown={onKeyDown}
     />
   );
 }
